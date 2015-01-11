@@ -1,0 +1,37 @@
+<!-- Weasley_clock.html -->
+<head>
+  <title>Weasley Clock</title>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Weasley Clock</h1>
+      <h3>Voluntary group status watcher</h3>
+      <form class="newMember">
+        <input type="text" name="newMemberName" placeholder="Add a group member" />
+      </form>
+    </header>
+
+    <ul>
+      {{#each members}}
+        {{> familyMember}}
+      {{/each}}
+    </ul>
+  </div>
+</body>
+
+<template name="familyMember">
+  <li class="member">
+    <span class="memberStatus">{{name}} is at {{location}}, feeling {{status}}.</span>
+    <button class="remove">&times;</button>
+    <button class="changeStatus">change status</button>
+    <button class="changeLocation">change location</button>
+    <form class={{#if hideLF}}hidden{{else}}locationForm{{/if}}>
+      <input type="text" name="locationIn" placeholder={{location}} />
+    </form>
+    <form class={{#if hideSF}}hidden{{else}}statusForm{{/if}}>
+      <input type="text" name="statusIn" placeholder={{status}} />
+    </form>
+  </li>
+</template>
