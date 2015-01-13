@@ -8,11 +8,20 @@
     <header>
       <h1>Weasley Clock</h1>
       <h3>Voluntary group status watcher</h3>
-      <form class="newMember">
-        <input type="text" name="newMemberName" placeholder="Add a group member" />
-      </form>
+      {{#if currentUser}}
+      <p>Logged in as {{currentUser.username}} in group {{userGroup}}.
+        <button class="logOut">log out</button>
+        {{#if noMatch}}
+          <p>
+            Share your status with your group!
+            <button class="share">share</button>
+          </p>
+        {{/if}}
+      </p>
+      {{else}}
+        {{> loginOrCreate}}
+      {{/if}}
     </header>
-
     <ul>
       {{#each members}}
         {{> familyMember}}
@@ -23,15 +32,48 @@
 
 <template name="familyMember">
   <li class="member">
-    <span class="memberStatus">{{name}} is at {{location}}, feeling {{status}}.</span>
+    {{#if currentUser}}
     <button class="remove">&times;</button>
     <button class="changeStatus">change status</button>
     <button class="changeLocation">change location</button>
-    <form class={{#if hideLF}}hidden{{else}}locationForm{{/if}}>
+    {{/if}}
+    <span class="memberStatus">{{name}} is at {{location}}, feeling {{status}}.</span>
+    {{#if showLF}}
+    <form class="locationForm">
       <input type="text" name="locationIn" placeholder={{location}} />
     </form>
-    <form class={{#if hideSF}}hidden{{else}}statusForm{{/if}}>
+    {{/if}}
+    {{#if showSF}}
+    <form class="statusForm">
       <input type="text" name="statusIn" placeholder={{status}} />
     </form>
+    {{/if}}
   </li>
+</template>
+
+<template name="loginOrCreate">
+  <form class={{#if create}}createAccount{{else}}loginAccount{{/if}}>
+    <p>{{#if create}}Create an account{{else}}Login{{/if}}</p>
+    {{#if create}}
+      <p class="explain">
+        To link your account to the rest of the accounts in your group,
+        just make <br> sure you all provide the same groupname when you create your
+        accounts.
+      </p>
+    {{/if}}
+    <input type="username" name="username" placeholder=Username />
+    {{#if create}}
+    <input type="groupname" name="groupname" placeholder="Groupname" />
+    {{/if}}
+    <input type="password" name="password" placeholder="Password" />
+    {{#if create}}
+      <input type="password" name="confirmPass" placeholder="Confirm Password" />
+    {{/if}}
+    <input type="submit" value="submit" />
+  </form>
+  <br>
+  <button class=loginSwitch>{{#if create}}log in{{else}}create an account{{/if}}</button>
+  <p class="errorMessage">
+    {{loginMessage}}
+  </p>
 </template>
